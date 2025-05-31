@@ -187,6 +187,29 @@
     .carousel-btn.next {
       right: 10px;
     }
+    /* Avaliação por estrelas */
+    .avaliacao-estrelas {
+      font-size: 2.5rem;
+      color: #ccc;
+      user-select: none;
+      display: inline-flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .avaliacao-estrelas .estrela {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.3s ease;
+      padding: 0;
+    }
+    .avaliacao-estrelas .estrela:hover,
+    .avaliacao-estrelas .estrela.hovered,
+    .avaliacao-estrelas .estrela.selected {
+      color: var(--accent);
+    }
+
     @media (max-width: 600px) {
       body {
         padding: 15px;
@@ -214,6 +237,7 @@
     <button role="tab" aria-selected="false" aria-controls="contato" id="tab-contato">Contato</button>
     <button role="tab" aria-selected="false" aria-controls="horario" id="tab-horario">Horário</button>
     <button role="tab" aria-selected="false" aria-controls="depoimentos" id="tab-depoimentos">Depoimentos</button>
+    <button role="tab" aria-selected="false" aria-controls="avaliacao" id="tab-avaliacao">Avaliação</button>
   </nav>
 
   <section id="sobre" role="tabpanel" tabindex="0" aria-labelledby="tab-sobre" class="content active">
@@ -283,30 +307,41 @@
     </div>
   </section>
 
+  <section id="avaliacao" role="tabpanel" tabindex="0" aria-labelledby="tab-avaliacao" class="content">
+    <h2>Avalie Nossa Oficina</h2>
+    <p>Gostaríamos muito de saber a sua opinião! Avalie nosso atendimento:</p>
+    <div class="avaliacao-estrelas" aria-label="Avaliação por estrelas" role="radiogroup">
+      <button class="estrela" aria-checked="false" role="radio" aria-label="1 estrela" data-value="1">★</button>
+      <button class="estrela" aria-checked="false" role="radio" aria-label="2 estrelas" data-value="2">★</button>
+      <button class="estrela" aria-checked="false" role="radio" aria-label="3 estrelas" data-value="3">★</button>
+      <button class="estrela" aria-checked="false" role="radio" aria-label="4 estrelas" data-value="4">★</button>
+      <button class="estrela" aria-checked="false" role="radio" aria-label="5 estrelas" data-value="5">★</button>
+    </div>
+    <p id="mensagem-avaliacao" style="margin-top: 15px; font-weight: 600;"></p>
+  </section>
+
   <script>
-    // Controle de abas
-    const tabs = document.querySelectorAll('nav button');
-    const sections = document.querySelectorAll('section.content');
+    // Gerenciamento das abas
+    const tabs = document.querySelectorAll('nav button[role="tab"]');
+    const sections = document.querySelectorAll('section[role="tabpanel"]');
 
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        // Remove active de tudo
+        // Atualiza estados das abas
         tabs.forEach(t => {
           t.classList.remove('active');
           t.setAttribute('aria-selected', 'false');
+          document.getElementById(t.getAttribute('aria-controls')).classList.remove('active');
         });
-        sections.forEach(s => s.classList.remove('active'));
-
-        // Ativa a aba clicada
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
-        const id = tab.getAttribute('aria-controls');
-        document.getElementById(id).classList.add('active');
-        document.getElementById(id).focus();
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        panel.classList.add('active');
+        panel.focus();
       });
     });
 
-    // Carrossel Depoimentos
+    // Carrossel de depoimentos
     const track = document.querySelector('.carousel-track');
     const slides = Array.from(track.children);
     const prevButton = document.querySelector('.carousel-btn.prev');
@@ -315,33 +350,57 @@
 
     function updateCarousel() {
       const slideWidth = slides[0].getBoundingClientRect().width;
-      track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-
-      slides.forEach((slide, index) => {
-        slide.classList.toggle('current-slide', index === currentIndex);
+      track.style.transform = 'translateX(-' + slideWidth * currentIndex + 'px)';
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('current-slide', idx === currentIndex);
       });
-
-      prevButton.disabled = currentIndex === 0;
-      nextButton.disabled = currentIndex === slides.length - 1;
     }
 
     prevButton.addEventListener('click', () => {
-      if(currentIndex > 0){
-        currentIndex--;
-        updateCarousel();
-      }
+      currentIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1;
+      updateCarousel();
     });
 
     nextButton.addEventListener('click', () => {
-      if(currentIndex < slides.length - 1){
-        currentIndex++;
-        updateCarousel();
-      }
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
+      currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
       updateCarousel();
     });
+
+    updateCarousel();
+
+    // Avaliação por estrelas
+    const estrelas = document.querySelectorAll('.avaliacao-estrelas .estrela');
+    const mensagemAvaliacao = document.getElementById('mensagem-avaliacao');
+    let avaliacaoSelecionada = 0;
+
+    estrelas.forEach((estrela, idx) => {
+      estrela.addEventListener('click', () => {
+        avaliacaoSelecionada = idx + 1;
+        atualizarEstrelas(avaliacaoSelecionada);
+        mensagemAvaliacao.textContent = `Obrigado pela sua avaliação de ${avaliacaoSelecionada} estrela${avaliacaoSelecionada > 1 ? 's' : ''}!`;
+      });
+      estrela.addEventListener('mouseenter', () => {
+        atualizarEstrelas(idx + 1, true);
+      });
+      estrela.addEventListener('mouseleave', () => {
+        atualizarEstrelas(avaliacaoSelecionada);
+      });
+    });
+
+    function atualizarEstrelas(valor, hover = false) {
+      estrelas.forEach((estrela, idx) => {
+        estrela.classList.remove('selected', 'hovered');
+        estrela.setAttribute('aria-checked', 'false');
+        if (hover) {
+          if (idx < valor) estrela.classList.add('hovered');
+        } else {
+          if (idx < valor) {
+            estrela.classList.add('selected');
+            estrela.setAttribute('aria-checked', 'true');
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
