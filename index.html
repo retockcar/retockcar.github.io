@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Retock Car - Oficina de Carros</title>
   <style>
     :root {
@@ -12,6 +12,7 @@
       --secondary: #25d366;
       --header: #111;
       --card: #fff;
+      --accent: #e67e22;
     }
     [data-theme="dark"] {
       --bg: #121212;
@@ -20,6 +21,7 @@
       --secondary: #2ecc71;
       --header: #000;
       --card: #1e1e1e;
+      --accent: #d35400;
     }
 
     * {
@@ -27,46 +29,60 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--bg);
       color: var(--text);
       transition: all 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-
     header {
       background: var(--header);
       color: white;
-      padding: 30px 15px;
+      padding: 25px 15px;
       text-align: center;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
     }
-
     header h1 {
-      font-size: 2.2em;
+      flex-basis: 100%;
+      font-size: 2.4em;
+      margin-bottom: 10px;
     }
-
     nav {
-      margin-top: 10px;
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-
-    nav a {
+    nav button {
+      background: none;
+      border: 2px solid var(--primary);
       color: var(--primary);
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 600;
       font-size: 1em;
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
-
-    nav a:hover {
-      text-decoration: underline;
+    nav button:hover,
+    nav button.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
     .theme-toggle {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 20px;
       background: var(--primary);
@@ -75,197 +91,346 @@
       padding: 8px 12px;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 1.1em;
+      z-index: 1100;
+      user-select: none;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 30px 15px;
+    main {
+      flex-grow: 1;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 15px 50px;
+      min-height: 300px;
     }
-
-    section {
-      margin-bottom: 60px;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s ease;
+    section.content {
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+      background: var(--card);
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
+    section.content.active {
+      display: block;
     }
 
     h2 {
-      font-size: 1.8em;
       color: var(--primary);
-      border-left: 5px solid var(--primary);
-      padding-left: 10px;
       margin-bottom: 20px;
+      border-left: 6px solid var(--primary);
+      padding-left: 12px;
+      font-size: 1.9em;
+    }
+    p {
+      font-size: 1.1em;
+      line-height: 1.5;
+      margin-bottom: 18px;
     }
 
+    /* Serviços grid */
     .servicos {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
       gap: 20px;
     }
-
     .servico {
-      background: var(--card);
-      padding: 20px;
+      background: var(--bg);
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 18px 20px;
+      box-shadow: 0 3px 7px rgba(0,0,0,0.07);
+      transition: transform 0.3s ease;
+    }
+    .servico:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+    }
+    .servico h3 {
+      margin-bottom: 10px;
+      color: var(--accent);
     }
 
+    /* Contato whatsapp */
     .contato .whatsapp-buttons {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 18px;
+      max-width: 360px;
     }
-
     .whatsapp-buttons a {
       background-color: var(--secondary);
       color: white;
-      padding: 15px;
-      border-radius: 10px;
+      font-weight: 700;
+      padding: 14px 18px;
+      border-radius: 12px;
       text-decoration: none;
       text-align: center;
-      font-weight: bold;
+      font-size: 1.2em;
+      box-shadow: 0 3px 12px rgba(37,211,102,0.6);
+      transition: background-color 0.3s ease;
+    }
+    .whatsapp-buttons a:hover {
+      background-color: #1ebe57;
     }
 
-    footer {
-      background: var(--header);
+    /* Horário */
+    .horario {
+      font-size: 1.15em;
+    }
+    .horario strong {
+      color: var(--accent);
+    }
+    .status {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1.3em;
+      padding: 12px;
+      border-radius: 10px;
+      width: fit-content;
+      user-select: none;
+    }
+    .status.aberto {
+      background-color: #27ae60;
       color: white;
-      text-align: center;
-      padding: 25px 15px;
-      font-size: 0.9em;
+      box-shadow: 0 3px 12px #27ae60aa;
+    }
+    .status.fechado {
+      background-color: #c0392b;
+      color: white;
+      box-shadow: 0 3px 12px #c0392baa;
     }
 
+    /* Botão voltar topo */
     #topBtn {
       display: none;
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 999;
+      bottom: 25px;
+      right: 25px;
+      z-index: 1100;
       background: var(--primary);
       color: white;
       border: none;
-      padding: 10px 14px;
+      padding: 12px 15px;
       border-radius: 50%;
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+    #topBtn:hover {
+      background: #005fa3;
     }
 
-    @media(max-width: 600px) {
-      header h1 {
-        font-size: 1.6em;
+    /* Fade in */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
       }
-      .theme-toggle {
-        top: 10px;
-        right: 10px;
-        padding: 6px 10px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsividade */
+    @media(max-width: 600px){
+      header h1 {
+        font-size: 1.8em;
+      }
+      nav button {
+        padding: 8px 14px;
+        font-size: 0.9em;
+      }
+      main {
+        margin: 25px 15px 40px;
+      }
+      .whatsapp-buttons a {
+        font-size: 1em;
+        padding: 12px 14px;
       }
     }
   </style>
 </head>
 <body>
 
-  <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo</button>
-  <button onclick="topFunction()" id="topBtn" title="Voltar ao topo">⬆️</button>
+  <button class="theme-toggle" aria-label="Alternar modo claro e escuro" title="Alternar modo claro e escuro">🌙</button>
+  <button id="topBtn" title="Voltar ao topo">⬆️</button>
 
   <header>
     <h1>Retock Car</h1>
-    <nav>
-      <a href="#sobre">Sobre</a>
-      <a href="#servicos">Serviços</a>
-      <a href="#contato">Contato</a>
+    <nav role="tablist" aria-label="Seções do site">
+      <button role="tab" aria-selected="true" aria-controls="sobre" id="tab-sobre" class="active">Sobre</button>
+      <button role="tab" aria-selected="false" aria-controls="servicos" id="tab-servicos">Serviços</button>
+      <button role="tab" aria-selected="false" aria-controls="contato" id="tab-contato">Contato</button>
+      <button role="tab" aria-selected="false" aria-controls="horario" id="tab-horario">Horário</button>
     </nav>
   </header>
 
-  <div class="container">
-    <section id="sobre">
+  <main>
+    <section id="sobre" role="tabpanel" tabindex="0" aria-labelledby="tab-sobre" class="content active">
       <h2>Sobre Nós</h2>
       <p>A <strong>Retock Car</strong> é uma oficina especializada em manutenção automotiva, com experiência, agilidade e confiança. Cuidamos do seu carro como se fosse nosso.</p>
     </section>
 
-    <section id="servicos">
+    <section id="servicos" role="tabpanel" tabindex="0" aria-labelledby="tab-servicos" class="content">
       <h2>Nossos Serviços</h2>
       <div class="servicos">
-        <div class="servico">
+        <article class="servico">
           <h3>Revisão Completa</h3>
           <p>Inspeção total do carro com troca de óleo, filtros e ajustes essenciais.</p>
-        </div>
-        <div class="servico">
+        </article>
+        <article class="servico">
           <h3>Balanceamento e Alinhamento</h3>
           <p>Precisão para garantir segurança e estabilidade ao dirigir.</p>
-        </div>
-        <div class="servico">
+        </article>
+        <article class="servico">
           <h3>Elétrica</h3>
           <p>Diagnóstico eletrônico, troca de baterias e sistemas elétricos.</p>
-        </div>
-        <div class="servico">
+        </article>
+        <article class="servico">
           <h3>Freios</h3>
           <p>Revisão de pastilhas, discos e fluido de freio com qualidade e segurança.</p>
-        </div>
+        </article>
       </div>
     </section>
 
-    <section id="contato" class="contato">
+    <section id="contato" role="tabpanel" tabindex="0" aria-labelledby="tab-contato" class="content">
       <h2>Fale Conosco</h2>
       <p>Entre em contato direto com nossos especialistas:</p>
       <div class="whatsapp-buttons">
-        <a href="https://wa.me/555192064767" target="_blank">💬 Falar com Michel - (51) 92064-767</a>
-        <a href="https://wa.me/555193199263" target="_blank">💬 Falar com Willian - (51) 93199-263</a>
+        <a href="https://wa.me/555192064767" target="_blank" rel="noopener">💬 Falar com Michel - (51) 92064-767</a>
+        <a href="https://wa.me/555193199263" target="_blank" rel="noopener">💬 Falar com Willian - (51) 93199-263</a>
       </div>
     </section>
-  </div>
+
+    <section id="horario" role="tabpanel" tabindex="0" aria-labelledby="tab-horario" class="content horario">
+      <h2>Horário de Funcionamento</h2>
+      <p><strong>Segunda a sexta:</strong> 8h às 12h e 13h30 às 20h</p>
+      <p><strong>Sábado:</strong> 8h às 12h</p>
+      <div id="status" class="status" aria-live="polite" aria-atomic="true">
+        <!-- Mensagem será inserida aqui -->
+      </div>
+    </section>
+  </main>
 
   <footer>
-    <p>&copy; 2025 Retock Car - Todos os direitos reservados.</p>
+    <p style="text-align:center; padding: 15px 0;">&copy; 2025 Retock Car - Todos os direitos reservados.</p>
   </footer>
 
   <script>
+    // Controle abas
+    const tabs = document.querySelectorAll("nav button[role='tab']");
+    const panels = document.querySelectorAll("section[role='tabpanel']");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        // Remover active e aria-selected dos tabs e painéis
+        tabs.forEach(t => {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
+        panels.forEach(p => p.classList.remove("active"));
+
+        // Ativar tab clicado e painel correspondente
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
+        const panel = document.getElementById(tab.getAttribute("aria-controls"));
+        panel.classList.add("active");
+        panel.focus();
+      });
+    });
+
+    // Alternar tema claro/escuro
+    const themeToggle = document.querySelector(".theme-toggle");
+    themeToggle.addEventListener("click", () => {
+      const html = document.documentElement;
+      if(html.dataset.theme === "dark") {
+        html.dataset.theme = "";
+        themeToggle.textContent = "🌙";
+      } else {
+        html.dataset.theme = "dark";
+        themeToggle.textContent = "☀️";
+      }
+    });
+
     // Botão voltar ao topo
     const topBtn = document.getElementById("topBtn");
-    window.onscroll = function () {
-      topBtn.style.display = window.scrollY > 200 ? "block" : "none";
-      reveal();
-    };
+    window.addEventListener("scroll", () => {
+      if(window.scrollY > 300) {
+        topBtn.style.display = "block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    });
+    topBtn.addEventListener("click", () => {
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
 
-    function topFunction() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    // Status aberto/fechado - lógica com horário da Retock Car
+    function verificaHorario() {
+      const statusDiv = document.getElementById("status");
+      const now = new Date();
+      const dia = now.getDay(); // 0=Dom,1=Seg,...6=Sab
+      const h = now.getHours();
+      const m = now.getMinutes();
 
-    // Animação fade-in
-    const sections = document.querySelectorAll("section");
-    function reveal() {
-      sections.forEach(sec => {
-        const pos = sec.getBoundingClientRect().top;
-        if (pos < window.innerHeight - 80) {
-          sec.classList.add("visible");
+      // Função que transforma hora e minuto em minutos totais para facilitar comparação
+      const minutosTotais = (hora, minuto) => hora*60 + minuto;
+
+      // Intervalos de funcionamento (em minutos)
+      // Segunda a sexta: 8h-12h e 13:30-20h
+      // Sábado: 8h-12h
+      // Domingo fechado
+
+      let aberto = false;
+      let horarioStr = "";
+
+      if(dia >= 1 && dia <= 5){
+        // Segunda a sexta
+        const agora = minutosTotais(h,m);
+        const manhaInicio = minutosTotais(8,0);
+        const manhaFim = minutosTotais(12,0);
+        const tardeInicio = minutosTotais(13,30);
+        const tardeFim = minutosTotais(20,0);
+
+        if((agora >= manhaInicio && agora < manhaFim) || (agora >= tardeInicio && agora < tardeFim)){
+          aberto = true;
+          horarioStr = "Estamos abertos agora! 🚗";
+        } else {
+          horarioStr = "Estamos fechados no momento. ⏰ Retorne em nosso horário de atendimento.";
         }
-      });
+      } else if(dia === 6){
+        // Sábado
+        const agora = minutosTotais(h,m);
+        const sabInicio = minutosTotais(8,0);
+        const sabFim = minutosTotais(12,0);
+        if(agora >= sabInicio && agora < sabFim){
+          aberto = true;
+          horarioStr = "Estamos abertos agora! 🚗";
+        } else {
+          horarioStr = "Estamos fechados no momento. ⏰ Retorne em nosso horário de atendimento.";
+        }
+      } else {
+        // Domingo
+        horarioStr = "Estamos fechados no momento. ⛔ Domingo não atendemos.";
+      }
+
+      statusDiv.textContent = horarioStr;
+      statusDiv.classList.toggle("aberto", aberto);
+      statusDiv.classList.toggle("fechado", !aberto);
     }
 
-    // Saudação com hora
+    // Executa ao carregar página
     window.addEventListener("DOMContentLoaded", () => {
+      verificaHorario();
+      // Saudação inicial
       setTimeout(() => {
         alert("🚗 Bem-vindo à Retock Car! Prontos para te atender.");
       }, 500);
-
-      const hora = new Date().getHours();
-      const texto = hora >= 6 && hora < 18
-        ? "🕒 Estamos abertos!"
-        : "🌙 Atendimento via WhatsApp 24h.";
-      const p = document.createElement("p");
-      p.textContent = texto;
-      document.querySelector("footer").appendChild(p);
     });
-
-    // Dark Mode
-    function toggleTheme() {
-      const html = document.documentElement;
-      html.dataset.theme = html.dataset.theme === "dark" ? "" : "dark";
-    }
   </script>
+
 </body>
 </html>
