@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retock Car - Oficina de Carros</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: #111;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+    header h1 {
+      margin-bottom: 10px;
+      font-size: 2.2em;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    section {
+      margin-bottom: 50px;
+    }
+    h2 {
+      color: #0077cc;
+      margin-bottom: 15px;
+    }
+    .servicos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .servico {
+      background: #fff;
+      padding: 20px;
+      flex: 1 1 300px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .contato form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .contato input, .contato textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .contato button {
+      background: #0077cc;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .contato button:hover {
+      background: #005fa3;
+    }
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Retock Car</h1>
+    <nav>
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <section id="sobre">
+      <h2>Sobre Nós</h2>
+      <p>A <strong>Retock Car</strong> é uma oficina especializada em manutenção e reparo automotivo, oferecendo serviços de alta qualidade, transparência e confiança. Atendemos todas as marcas e modelos com uma equipe experiente e equipamentos modernos.</p>
+    </section>
+
+    <section id="servicos">
+      <h2>Nossos Serviços</h2>
+      <div class="servicos">
+        <div class="servico">
+          <h3>Revisão Completa</h3>
+          <p>Inspeção geral do veículo, troca de óleo, filtros, verificação de freios e suspensão.</p>
+        </div>
+        <div class="servico">
+          <h3>Alinhamento e Balanceamento</h3>
+          <p>Deixe seu carro estável e seguro com nosso serviço de alinhamento computadorizado.</p>
+        </div>
+        <div class="servico">
+          <h3>Troca de Pneus</h3>
+          <p>Serviço rápido e seguro com os melhores preços em pneus novos.</p>
+        </div>
+        <div class="servico">
+          <h3>Elétrica e Diagnóstico</h3>
+          <p>Identificamos falhas e corrigimos problemas no sistema elétrico do seu carro.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato" class="contato">
+      <h2>Fale Conosco</h2>
+      <p>Entre em contato para agendar um serviço ou tirar dúvidas:</p>
+      <form>
+        <input type="text" name="nome" placeholder="Seu nome" required />
+        <input type="email" name="email" placeholder="Seu e-mail" required />
+        <textarea name="mensagem" rows="5" placeholder="Sua mensagem" required></textarea>
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Retock Car - Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>
