@@ -2,78 +2,118 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Retock Car - Oficina de Carros</title>
   <style>
+    :root {
+      --bg: #f9f9f9;
+      --text: #333;
+      --primary: #0077cc;
+      --secondary: #25d366;
+      --header: #111;
+      --card: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --primary: #1e90ff;
+      --secondary: #2ecc71;
+      --header: #000;
+      --card: #1e1e1e;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9f9f9;
-      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: all 0.3s ease;
     }
 
     header {
-      background: linear-gradient(to right, #111, #222);
-      color: #fff;
-      padding: 30px 0;
+      background: var(--header);
+      color: white;
+      padding: 30px 15px;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
+
     header h1 {
-      font-size: 2.8em;
-      margin-bottom: 10px;
+      font-size: 2.2em;
     }
+
+    nav {
+      margin-top: 10px;
+    }
+
     nav a {
-      color: #00bfff;
-      margin: 0 15px;
+      color: var(--primary);
+      margin: 0 10px;
       text-decoration: none;
       font-weight: bold;
-      font-size: 1.1em;
+      font-size: 1em;
     }
+
     nav a:hover {
-      color: #fff;
+      text-decoration: underline;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
     .container {
-      padding: 50px 20px;
       max-width: 1100px;
       margin: auto;
+      padding: 30px 15px;
     }
 
     section {
       margin-bottom: 60px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
     }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     h2 {
-      color: #0077cc;
-      margin-bottom: 20px;
-      font-size: 2em;
-      border-left: 5px solid #0077cc;
+      font-size: 1.8em;
+      color: var(--primary);
+      border-left: 5px solid var(--primary);
       padding-left: 10px;
+      margin-bottom: 20px;
     }
 
     .servicos {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 25px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
     }
+
     .servico {
-      background: #fff;
-      padding: 25px;
-      flex: 1 1 300px;
+      background: var(--card);
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-    }
-    .servico:hover {
-      transform: translateY(-5px);
-    }
-    .servico h3 {
-      color: #444;
-      margin-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     .contato .whatsapp-buttons {
@@ -81,66 +121,55 @@
       flex-direction: column;
       gap: 15px;
     }
+
     .whatsapp-buttons a {
-      background-color: #25d366;
+      background-color: var(--secondary);
       color: white;
       padding: 15px;
       border-radius: 10px;
       text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1em;
       text-align: center;
-      transition: background 0.3s ease;
-    }
-    .whatsapp-buttons a:hover {
-      background-color: #1ebe57;
+      font-weight: bold;
     }
 
     footer {
-      background: #111;
-      color: #fff;
+      background: var(--header);
+      color: white;
       text-align: center;
-      padding: 25px;
-      margin-top: 60px;
-      font-size: 0.95em;
+      padding: 25px 15px;
+      font-size: 0.9em;
     }
 
-    /* Botão "voltar ao topo" */
     #topBtn {
       display: none;
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 99;
-      background-color: #0077cc;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      background: var(--primary);
       color: white;
       border: none;
-      padding: 12px 18px;
-      border-radius: 50px;
+      padding: 10px 14px;
+      border-radius: 50%;
+      font-size: 20px;
       cursor: pointer;
-      font-size: 16px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: background 0.3s ease;
-    }
-    #topBtn:hover {
-      background-color: #005fa3;
     }
 
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+    @media(max-width: 600px) {
+      header h1 {
+        font-size: 1.6em;
+      }
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        padding: 6px 10px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Botão Voltar ao Topo -->
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo</button>
   <button onclick="topFunction()" id="topBtn" title="Voltar ao topo">⬆️</button>
 
   <header>
@@ -155,7 +184,7 @@
   <div class="container">
     <section id="sobre">
       <h2>Sobre Nós</h2>
-      <p>A <strong>Retock Car</strong> é uma oficina especializada em manutenção automotiva, com anos de experiência no mercado. Prezamos pela qualidade, honestidade e bom atendimento. Estamos localizados em uma área de fácil acesso e contamos com equipamentos modernos e uma equipe altamente qualificada.</p>
+      <p>A <strong>Retock Car</strong> é uma oficina especializada em manutenção automotiva, com experiência, agilidade e confiança. Cuidamos do seu carro como se fosse nosso.</p>
     </section>
 
     <section id="servicos">
@@ -163,26 +192,26 @@
       <div class="servicos">
         <div class="servico">
           <h3>Revisão Completa</h3>
-          <p>Inspeção geral, troca de óleo e filtros, verificação de freios, suspensão e muito mais.</p>
+          <p>Inspeção total do carro com troca de óleo, filtros e ajustes essenciais.</p>
         </div>
         <div class="servico">
-          <h3>Alinhamento e Balanceamento</h3>
-          <p>Garantimos que seu carro esteja estável e seguro, com equipamentos de precisão.</p>
+          <h3>Balanceamento e Alinhamento</h3>
+          <p>Precisão para garantir segurança e estabilidade ao dirigir.</p>
         </div>
         <div class="servico">
-          <h3>Troca de Pneus</h3>
-          <p>Oferecemos pneus de qualidade e instalação rápida com preços acessíveis.</p>
+          <h3>Elétrica</h3>
+          <p>Diagnóstico eletrônico, troca de baterias e sistemas elétricos.</p>
         </div>
         <div class="servico">
-          <h3>Elétrica e Diagnóstico</h3>
-          <p>Resolvemos falhas elétricas e realizamos diagnósticos computadorizados.</p>
+          <h3>Freios</h3>
+          <p>Revisão de pastilhas, discos e fluido de freio com qualidade e segurança.</p>
         </div>
       </div>
     </section>
 
     <section id="contato" class="contato">
       <h2>Fale Conosco</h2>
-      <p>Entre em contato direto via WhatsApp:</p>
+      <p>Entre em contato direto com nossos especialistas:</p>
       <div class="whatsapp-buttons">
         <a href="https://wa.me/555192064767" target="_blank">💬 Falar com Michel - (51) 92064-767</a>
         <a href="https://wa.me/555193199263" target="_blank">💬 Falar com Willian - (51) 93199-263</a>
@@ -195,53 +224,48 @@
   </footer>
 
   <script>
-    // Botão "Voltar ao topo"
+    // Botão voltar ao topo
     const topBtn = document.getElementById("topBtn");
     window.onscroll = function () {
-      scrollFunction();
-      revealElements();
+      topBtn.style.display = window.scrollY > 200 ? "block" : "none";
+      reveal();
     };
 
-    function scrollFunction() {
-      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-        topBtn.style.display = "block";
-      } else {
-        topBtn.style.display = "none";
-      }
-    }
-
     function topFunction() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // Animações de entrada
-    const fadeElements = document.querySelectorAll("section");
-    function revealElements() {
-      fadeElements.forEach((el) => {
-        const top = el.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        if (top < windowHeight - 100) {
-          el.classList.add("visible");
+    // Animação fade-in
+    const sections = document.querySelectorAll("section");
+    function reveal() {
+      sections.forEach(sec => {
+        const pos = sec.getBoundingClientRect().top;
+        if (pos < window.innerHeight - 80) {
+          sec.classList.add("visible");
         }
       });
     }
-    fadeElements.forEach((el) => el.classList.add("fade-in"));
 
-    // Alerta de boas-vindas
+    // Saudação com hora
     window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
-        alert("🚗 Bem-vindo à Retock Car! Estamos prontos para cuidar do seu carro.");
-      }, 800);
+        alert("🚗 Bem-vindo à Retock Car! Prontos para te atender.");
+      }, 500);
+
+      const hora = new Date().getHours();
+      const texto = hora >= 6 && hora < 18
+        ? "🕒 Estamos abertos!"
+        : "🌙 Atendimento via WhatsApp 24h.";
+      const p = document.createElement("p");
+      p.textContent = texto;
+      document.querySelector("footer").appendChild(p);
     });
 
-    // Rodapé com horário
-    const footer = document.querySelector("footer");
-    const data = new Date();
-    const hora = data.getHours();
-    const saudacao = hora >= 6 && hora < 18 ? "Estamos abertos!" : "Atendimento via WhatsApp 24h.";
-    const msg = document.createElement("p");
-    msg.textContent = `🕒 Agora são ${data.toLocaleTimeString()} — ${saudacao}`;
-    footer.appendChild(msg);
+    // Dark Mode
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === "dark" ? "" : "dark";
+    }
   </script>
 </body>
 </html>
